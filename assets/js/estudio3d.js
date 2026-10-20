@@ -158,7 +158,10 @@ function texturaSombra() {
   return new THREE.CanvasTexture(c);
 }
 
-async function texturaLogo(urlCoroa) {
+// Logo do projetor: coroa e nome nítidos, com um leve halo de luz em volta (gobo).
+const LOGO_W = 2048;
+const LOGO_H = 1360;
+async function texturaLogo(urlCoroa, anisotropia) {
   try { await document.fonts.load('900 150px Nunito'); } catch { /* sem a fonte usa a do sistema */ }
   const coroa = await new Promise((ok, falha) => {
     const img = new Image();
@@ -167,17 +170,46 @@ async function texturaLogo(urlCoroa) {
     img.src = urlCoroa;
   });
   const c = document.createElement('canvas');
-  c.width = 1024;
-  c.height = 680;
+  c.width = LOGO_W;
+  c.height = LOGO_H;
   const g = c.getContext('2d');
-  const w = 560;
+  const w = 1080;
   const h = (w * coroa.height) / coroa.width;
-  g.filter = 'blur(1.5px)';
-  g.drawImage(coroa, (c.width - w) / 2, 40, w, h);
-  g.font = '900 170px Nunito, "Arial Rounded MT Bold", sans-serif';
+  const topo = 90;
+  const base = topo + h + 300;
+  g.imageSmoothingQuality = 'high';
+  g.font = '900 340px Nunito, "Arial Rounded MT Bold", sans-serif';
   g.textAlign = 'center';
-  g.fillStyle = '#e9e6dc';
-  g.fillText('Oreidoppf', c.width / 2, 40 + h + 150);
+  // halo: a mesma arte desfocada por baixo, como a luz que vaza do projetor
+  g.save();
+  g.filter = 'blur(18px)';
+  g.globalAlpha = .28;
+  g.drawImage(coroa, (LOGO_W - w) / 2, topo, w, h);
+  g.fillStyle = '#fff3d6';
+  g.fillText('Oreidoppf', LOGO_W / 2, base);
+  g.restore();
+  // arte nítida por cima
+  g.drawImage(coroa, (LOGO_W - w) / 2, topo, w, h);
+  g.fillStyle = '#f6f3ea';
+  g.fillText('Oreidoppf', LOGO_W / 2, base);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  // sem anisotropia o nome borra quando visto rasante no chão
+  t.anisotropy = anisotropia;
+  return t;
+}
+
+// poça de luz do projetor no piso, por baixo do logo
+function texturaFacho() {
+  const c = document.createElement('canvas');
+  c.width = c.height = 256;
+  const g = c.getContext('2d');
+  const r = g.createRadialGradient(128, 128, 0, 128, 128, 128);
+  r.addColorStop(0, 'rgba(255,240,210,.5)');
+  r.addColorStop(.45, 'rgba(255,236,200,.2)');
+  r.addColorStop(1, 'rgba(255,236,200,0)');
+  g.fillStyle = r;
+  g.fillRect(0, 0, 256, 256);
   const t = new THREE.CanvasTexture(c);
   t.colorSpace = THREE.SRGBColorSpace;
   return t;
@@ -274,14 +306,21 @@ export async function montaStudio(palco, { urlModelo, urlCoroa, aoProgresso, aoC
   cena.add(sombra);
 
   // logo projetado no chão, como o projetor do studio
+  const anisotropia = renderer.capabilities.getMaxAnisotropy();
+  const facho = new THREE.Mesh(
+    new THREE.PlaneGeometry(4.2, 3),
+    new THREE.MeshBasicMaterial({ map: texturaFacho(), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: .5 }),
+  );
+  facho.rotation.x = -Math.PI / 2;
+  facho.position.y = .004;
   const logo = new THREE.Mesh(
-    new THREE.PlaneGeometry(2.3, 2.3 * 680 / 1024),
-    new THREE.MeshBasicMaterial({ map: await texturaLogo(urlCoroa), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: .9 }),
+    new THREE.PlaneGeometry(2.7, 2.7 * LOGO_H / LOGO_W),
+    new THREE.MeshBasicMaterial({ map: await texturaLogo(urlCoroa, anisotropia), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false }),
   );
   logo.rotation.x = -Math.PI / 2;
   logo.position.y = .006;
   // o grupo gira em torno do eixo vertical para o logo ficar de frente para quem olha
-  const projecao = new THREE.Group().add(logo);
+  const projecao = new THREE.Group().add(facho, logo);
   cena.add(projecao);
   function posicionaLogo({ x = 0, z = 3.5, giro = 0 } = {}) {
     projecao.position.set(x, 0, z);

@@ -78,6 +78,6 @@ node ferramentas/prepara-modelo.mjs CarConcept.glb assets/3d/carro.glb
 ```
 
 As imagens do topo saem do próprio studio, por exemplo:
-`ferramentas/studio.html?foto=1&az=0.85&polar=1.33&dist=8.8&alvo=-0.8,0.5,2.25&logo=1.95,2.2,0.85` (computador, 1920x1080) e
+`ferramentas/studio.html?foto=1&az=0.85&polar=1.33&dist=8.8&alvo=-0.8,0.5,2.25&logo=1.55,2.75,0.85` (computador, 1920x1080) e
 `ferramentas/studio.html?foto=1&az=0.85&polar=1.37&dist=13&alvo=0,1.15,0.2&logo=2.05,2.05,0.85&teto=0` (celular, 1080x1920).
 

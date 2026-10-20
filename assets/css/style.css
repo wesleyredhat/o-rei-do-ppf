@@ -266,6 +266,17 @@ body.menu-aberto { overflow: hidden; }
   .hero__titulo { max-width: 620px; }
 }
 
+/* tablet deitado: texto e carro dividem a largura, então a sombra do lado do texto cresce */
+@media (min-width: 700px) and (max-width: 1199px) {
+  .hero::before {
+    background:
+      linear-gradient(90deg, rgba(6, 6, 7, .9) 0%, rgba(6, 6, 7, .5) 40%, rgba(6, 6, 7, 0) 60%),
+      linear-gradient(0deg, var(--preto) 0%, transparent 16%);
+  }
+  .hero { background: #060607; }
+  .hero__render img { object-fit: contain; object-position: 100% 100%; }
+}
+
 /* ---------- faixa rolante: fita de box ---------- */
 .faixa { position: relative; z-index: 2; background: var(--amarelo); color: var(--tinta-escura); overflow: hidden; padding: 16px 0; transform: rotate(-1.2deg) scale(1.03); margin: -8px 0 -14px; box-shadow: 0 14px 30px rgba(0, 0, 0, .35); }
 .faixa::before, .faixa::after { content: ''; position: absolute; left: 0; right: 0; height: 4px; background: var(--tinta-escura); }
