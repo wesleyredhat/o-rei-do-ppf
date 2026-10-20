@@ -42,7 +42,7 @@ Repositório: https://github.com/wesleyredhat/o-rei-do-ppf · Site: https://wesl
 
 ## Pendências (atualizar esta lista ao concluir)
 
-- [ ] **GitHub Pages**: ativar em Settings > Pages (main / root). O `gh` não está instalado neste Mac; o push funciona pelo git com HTTPS.
+- [x] **GitHub Pages**: ativo desde 20/10/2026 (main / root). Cada push na `main` publica em cerca de 1 minuto. O `gh` não está instalado neste Mac; o push funciona pelo git com HTTPS.
 - [ ] **Supabase**: o usuário precisa criar o projeto; depois preencher `SUPABASE_URL` e `SUPABASE_ANON_KEY` no `config.js`, rodar o `schema.sql`, criar o usuário do dono e inserir em `admins` (passo a passo no README).
 - [ ] **Domínio**: contratar (sugestão `oreidoppf.com.br`, estava livre no whois em 20/10/2026), configurar DNS, criar `CNAME`, trocar `og:url`/`og:image`.
 - [ ] Fotos reais dos carros (o dono sobe pelo painel) e, se quiser, uma foto de capa marcada com a coroa.
