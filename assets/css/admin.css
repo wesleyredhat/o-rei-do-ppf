@@ -1,4 +1,4 @@
-/* Área do estúdio: pensada para o celular, com alvos grandes de toque. */
+/* Área do studio: pensada para o celular, com alvos grandes de toque. */
 .adm { min-height: 100svh; }
 .adm code { font: 400 .85em var(--fonte-mono); color: var(--amarelo-claro); }
 

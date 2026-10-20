@@ -1,20 +1,23 @@
 # O Rei do PPF
 
-Site do **O Rei do PPF** (aplicação de PPF e películas automotivas), com área do estúdio para publicar as fotos dos carros dos clientes.
+Site do **O Rei do PPF** (aplicação de PPF e películas automotivas), com área do studio para publicar as fotos dos carros dos clientes.
 
 - Site: https://wesleyredhat.github.io/o-rei-do-ppf/ (até o domínio próprio ficar pronto)
-- Instagram: [@oreidoppf](https://instagram.com/oreidoppf) · Estúdio: [@oreidoppf.estudio](https://instagram.com/oreidoppf.estudio)
+- Instagram: [@oreidoppf](https://instagram.com/oreidoppf) · Studio: [@oreidoppf.estudio](https://instagram.com/oreidoppf.estudio)
 - WhatsApp: (11) 98455-1361
 
 ## O que tem
 
 | Arquivo | Para quê |
 | --- | --- |
-| `index.html` | Site: serviços, teste de bancada, monte sua proteção, simulador de película, processo, galeria, dúvidas e orçamento pelo WhatsApp |
-| `admin.html` | Área do estúdio: entrar, subir fotos, escolher a capa, ocultar, editar e apagar |
+| `index.html` | Site: topo com o carro no studio, simulador 3D (monte sua proteção e película), serviços, teste de bancada, processo, galeria, dúvidas e orçamento pelo WhatsApp |
+| `admin.html` | Área do studio: entrar, subir fotos, escolher a capa, ocultar, editar e apagar |
 | `assets/js/config.js` | WhatsApp, Instagram, chaves do Supabase e a lista de serviços (nome, texto, itens e preço opcional) |
 | `supabase/schema.sql` | Tabelas, permissões e o bucket de fotos |
-| `tests/e2e.py` | Testes no navegador (site, painel e galeria) |
+| `assets/js/estudio3d.js` + `assets/3d/carro.glb` | Studio 3D (three.js): piso, luzes hexagonais, logo projetado no chão e a película entrando peça por peça |
+| `tests/e2e.py` | Testes no navegador (site, simulador 3D, bancada, painel e galeria) |
+| `ferramentas/studio.html` | O studio em tela cheia; com parâmetros na URL gera as imagens do topo (`hero.jpg` e `hero-mobile.jpg`) |
+| `ferramentas/prepara-modelo.mjs` | Prepara o carro 3D (tira logos, troca a pintura, comprime) |
 | `ferramentas/og.html` | Arte da imagem de compartilhamento (`assets/img/og.jpg`) |
 
 ## Rodar no computador
@@ -24,7 +27,7 @@ python3 -m http.server 8000
 # abrir http://localhost:8000
 ```
 
-## Ligar a galeria e a área do estúdio (Supabase)
+## Ligar a galeria e a área do studio (Supabase)
 
 1. Em [supabase.com](https://supabase.com), criar um projeto (ex.: `o-rei-do-ppf`, região South America (São Paulo)).
 2. **SQL Editor**: colar o conteúdo de `supabase/schema.sql` e clicar em **Run**.
@@ -38,7 +41,7 @@ python3 -m http.server 8000
 
 ## Como o dono sobe as fotos
 
-No rodapé do site, **Área do estúdio** (ou `/admin.html`) > entrar > **Escolher fotos** > preencher carro e serviço > **Publicar**.
+No rodapé do site, **Área do studio** (ou `/admin.html`) > entrar > **Escolher fotos** > preencher carro e serviço > **Publicar**.
 As fotos são reduzidas no próprio celular antes de subir (2000 px e uma miniatura de 640 px).
 A foto mais recente marcada com a coroa vira a capa do topo do site.
 Dica: no celular, "Adicionar à tela de início" deixa o painel com cara de app.
@@ -63,3 +66,18 @@ python3 tests/e2e.py
 ```
 
 O Supabase é trocado por um falso em memória (`tests/fake-supabase.js`), então os testes não mexem em dados reais.
+
+## Carro 3D
+
+Modelo [Car Concept](https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/CarConcept), de Eric Chadwick (Darmstadt Graphics Group), licença **CC BY 4.0**: pode usar comercialmente, desde que o crédito continue no rodapé do site.
+Para refazer o `assets/3d/carro.glb` a partir do original:
+
+```bash
+npm i @gltf-transform/core@4 @gltf-transform/extensions@4 @gltf-transform/functions@4 meshoptimizer sharp
+node ferramentas/prepara-modelo.mjs CarConcept.glb assets/3d/carro.glb
+```
+
+As imagens do topo saem do próprio studio, por exemplo:
+`ferramentas/studio.html?foto=1&az=0.85&polar=1.33&dist=8.8&alvo=-0.8,0.5,2.25&logo=1.95,2.2,0.85` (computador, 1920x1080) e
+`ferramentas/studio.html?foto=1&az=0.85&polar=1.37&dist=13&alvo=0,1.15,0.2&logo=2.05,2.05,0.85&teto=0` (celular, 1080x1920).
+

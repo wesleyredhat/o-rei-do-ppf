@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Studio 3D | O Rei do PPF</title>
+  <!-- Página de apoio: abre o studio em tela cheia para conferir o 3D e gerar a imagem do topo do site.
+       Parâmetros: ?foto=1 (sem giro), az, polar, dist, alvo=x,y,z (câmera), logo=x,z,giro, sel=capo,portas (peças), cor=#hex, g=0..4 (película) -->
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@900&display=block" rel="stylesheet">
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }
+  </script>
+  <style>html, body { margin: 0; height: 100%; background: #060607; } #palco { position: fixed; inset: 0; } canvas { display: block; width: 100%; height: 100%; }</style>
+</head>
+<body>
+  <div id="palco"></div>
+  <script type="module">
+    import { montaStudio } from '../assets/js/estudio3d.js';
+    const q = new URLSearchParams(location.search);
+    const foto = q.has('foto');
+    const studio = await montaStudio(document.getElementById('palco'), { urlModelo: '../assets/3d/carro.glb', urlCoroa: '../assets/img/logo.png', foto });
+    if (q.get('cor')) studio.cor(q.get('cor'));
+    if (q.get('g')) studio.pelicula(Number(q.get('g')));
+    if (q.has('az')) studio.pose({ azimute: Number(q.get('az')), polar: Number(q.get('polar') || 1.25), distancia: Number(q.get('dist') || 7.6), alvo: (q.get('alvo') || '0,.55,.2').split(',').map(Number) });
+    if (q.get('logo')) { const [x, z, giro] = q.get('logo').split(',').map(Number); studio.logo({ x, z, giro }); }
+    if (q.get('teto') === '0') studio.teto(false);
+    if (q.get('sel')) studio.define(new Set(q.get('sel').split(',')));
+    window.studio = studio;
+    setTimeout(() => { window.pronto = true; }, Number(q.get('espera') || 1500));
+  </script>
+</body>
+</html>

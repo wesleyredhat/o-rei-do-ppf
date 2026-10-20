@@ -13,8 +13,9 @@ Repositório: https://github.com/wesleyredhat/o-rei-do-ppf · Site: https://wesl
 
 ## O negócio (dados reais)
 
-- Nome: O Rei do PPF | Aplicações de PPF. WhatsApp 5511984551361. Instagram @oreidoppf (verificado), estúdio @oreidoppf.estudio.
+- Nome: O Rei do PPF | Aplicações de PPF. WhatsApp 5511984551361. Instagram @oreidoppf (verificado), studio @oreidoppf.estudio.
 - Bio: "PPF de alto padrão para quem exige excelência" / "Qualidade, precisão e acabamento impecável" / "Atendimento via WhatsApp".
+- O pessoal chama o lugar de **studio** (não "estúdio"). A marca escrita é **Oreidoppf** (tudo junto, letra arredondada e grossa: no site usamos Nunito 900), embaixo da coroa, como no logo projetado no chão do studio.
 - Logo: coroa dourada geométrica. `assets/img/logo.png` foi recortado do print enviado pelo usuário (fundo preto removido por "unscreen"); derivados: `logo-160.png`, `logo-320.png`, `favicon.png`, `apple-touch-icon.png`.
 - O usuário também mandou um logo de **águia** (círculo branco, preto, vermelho e azul-marinho). Papel desconhecido (parceiro? marca antiga?): perguntar antes de usar.
 
@@ -22,8 +23,11 @@ Repositório: https://github.com/wesleyredhat/o-rei-do-ppf · Site: https://wesl
 
 - Tema automobilismo + alto padrão. Paleta pedida pelo usuário em 20/10/2026: **preto, cinza cimento e destaques em amarelo** (`--amarelo #ffc61a`). O logo continua dourado (é a marca).
 - Seções alternam preto e cimento (`.secao--cimento` troca os tokens `--texto`, `--suave`, `--linha`, `--acento`; cartões escuros dentro do cimento voltam aos tokens claros).
-- Fontes: Big Shoulders Display (títulos), Archivo (texto), Chivo Mono (etiquetas).
-- Elementos: etiqueta amarela de box (`.kicker`), fita amarela inclinada com os serviços, grid de largada P1 a P6, carro lateral com o "rodo" aplicando o filme, carro visto de cima clicável (Monte sua proteção), simulador G5 a G70, pit stop em 5 etapas, **teste de bancada** (`assets/js/bancada.js`: canvas com capô metade sem PPF e metade com PPF; risco e pedrisco ficam de um lado e somem/quicam do outro; tem demonstração automática).
+- Fontes: Big Shoulders Display (títulos), Archivo (texto), Chivo Mono (etiquetas), Nunito 900 (só a marca "Oreidoppf").
+- Em 20/10/2026 o pessoal do studio não gostou muito do primeiro layout e o usuário achou feio o carrinho desenhado; pediu impacto e destaque para a marca e o logo. A dona ("ela") vai mandar ideias de layout: quando chegarem, seguir as ideias dela.
+- Topo: render 3D do carro no studio (`assets/img/hero.jpg` e `hero-mobile.jpg`, gerados por `ferramentas/studio.html`) com a marca "Oreidoppf" grande. Uma foto marcada como capa no painel substitui o render.
+- **Simulador 3D** (`#simulador`, `assets/js/estudio3d.js`): carro Car Concept (CC BY 4.0, crédito no rodapé) no piso de placas, luzes hexagonais refletindo na pintura, logo projetado no chão. Tocar numa peça faz o "rodo" passar e a película entrar (shader com a faixa da frente para trás); pacotes, 13 peças, película G5 a G70 nos vidros e 5 cores. Carrega só quando o visitante chega perto (three.js 0.170 pelo jsDelivr, import map no `index.html`). Peças e películas em `assets/js/partes.js`; o capô, os para-choques e as laterais vêm inteiros no modelo e são separados por posição no shader (`regiao()` em JS e GLSL, manter iguais).
+- Elementos: etiqueta amarela de box (`.kicker`), fita amarela inclinada com os serviços, grid de largada P1 a P6, pit stop em 5 etapas, **teste de bancada** (`assets/js/bancada.js`: canvas com capô metade sem PPF e metade com PPF; risco e pedrisco ficam de um lado e somem/quicam do outro; tem demonstração automática).
 - Orçamento não guarda nada: monta a mensagem e abre o WhatsApp.
 - Bot de WhatsApp: o usuário disse que **não precisa agora**.
 
@@ -36,7 +40,8 @@ Repositório: https://github.com/wesleyredhat/o-rei-do-ppf · Site: https://wesl
 
 ## Testar antes de entregar
 
-- `python3 tests/e2e.py`: sobe um servidor local e testa site (390 px e 1440 px, sem rolagem lateral), teste de bancada, painel completo e galeria com Supabase falso. Precisa de `playwright` e `pillow`.
+- `python3 tests/e2e.py`: sobe um servidor local e testa site (390 px e 1440 px, sem rolagem lateral), simulador 3D (carrega, pacotes, toque no carro), teste de bancada, painel completo e galeria com Supabase falso. Precisa de `playwright`, `pillow` e internet (three.js vem do CDN).
+- Screenshots do 3D com GPU: `chromium.launch(args=['--use-angle=metal', '--enable-gpu', '--ignore-gpu-blocklist'])`. Para clicar no carro, esperar `#studio-palco.pronto` e o fim do fade da tela de carregamento.
 - SQL: Postgres 16 do Homebrew (`/opt/homebrew/opt/postgresql@16`). Montar um stub do Supabase (roles `anon`/`authenticated`, `auth.users`, `auth.uid()` lendo `request.jwt.claim.sub`, `storage.buckets` e `storage.objects` com RLS), rodar o `schema.sql` duas vezes e testar como anon, logado comum e admin. No scratchpad o caminho é longo demais para socket Unix: subir com `-c unix_socket_directories=''` e conectar por `-h 127.0.0.1`.
 - Conferir também com screenshots no celular e no computador.
 
@@ -46,5 +51,6 @@ Repositório: https://github.com/wesleyredhat/o-rei-do-ppf · Site: https://wesl
 - [ ] **Supabase**: o usuário precisa criar o projeto; depois preencher `SUPABASE_URL` e `SUPABASE_ANON_KEY` no `config.js`, rodar o `schema.sql`, criar o usuário do dono e inserir em `admins` (passo a passo no README).
 - [ ] **Domínio**: contratar (sugestão `oreidoppf.com.br`, estava livre no whois em 20/10/2026), configurar DNS, criar `CNAME`, trocar `og:url`/`og:image`.
 - [ ] Fotos reais dos carros (o dono sobe pelo painel) e, se quiser, uma foto de capa marcada com a coroa.
-- [ ] Perguntar: papel do logo da águia; endereço e horário do estúdio (hoje o site não mostra); se quer preços "a partir de" nos serviços (`preco` no `SERVICOS`).
+- [ ] Perguntar: papel do logo da águia; endereço e horário do studio (hoje o site não mostra); se quer preços "a partir de" nos serviços (`preco` no `SERVICOS`).
+- [ ] Ideias de layout da dona do studio (vão chegar).
 - [ ] Ideias para depois: página/arquivo de manifest para o painel virar app no celular; Google Meu Negócio; depoimentos reais (só com textos enviados pelo dono).

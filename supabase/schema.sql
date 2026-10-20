@@ -1,4 +1,4 @@
--- O Rei do PPF: galeria de fotos e área do estúdio.
+-- O Rei do PPF: galeria de fotos e área do studio.
 -- Rode inteiro no SQL Editor do Supabase. Pode rodar de novo sem problema.
 
 -- Quem pode entrar no painel

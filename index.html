@@ -16,8 +16,13 @@
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Big+Shoulders+Display:wght@600;700;800;900&family=Chivo+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Big+Shoulders+Display:wght@600;700;800;900&family=Chivo+Mono:wght@400;500&family=Nunito:wght@900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="preload" as="image" href="assets/img/hero.jpg" media="(min-width: 700px)">
+  <link rel="preload" as="image" href="assets/img/hero-mobile.jpg" media="(max-width: 699px)">
+  <script type="importmap">
+    { "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.min.js", "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }
+  </script>
 </head>
 <body>
   <a class="pular" href="#conteudo">Pular para o conteúdo</a>
@@ -26,12 +31,12 @@
     <div class="topo__barra">
       <a class="marca" href="#inicio" aria-label="O Rei do PPF, início">
         <img class="marca__coroa" src="assets/img/logo-160.png" alt="" width="160" height="102">
-        <span class="marca__nome">O Rei <small>do</small> PPF</span>
+        <span class="marca__nome">Oreidoppf</span>
       </a>
       <nav class="menu" id="menu" aria-label="Seções">
+        <a href="#simulador">Simulador</a>
         <a href="#servicos">Serviços</a>
-        <a href="#monte">Monte a sua</a>
-        <a href="#peliculas">Películas</a>
+        <a href="#bancada">Teste</a>
         <a href="#processo">Processo</a>
         <a href="#galeria">Galeria</a>
         <a href="#duvidas">Dúvidas</a>
@@ -46,101 +51,31 @@
   <main id="conteudo">
     <!-- HERO -->
     <section class="hero" id="inicio">
+      <picture class="hero__render" aria-hidden="true">
+        <source media="(max-width: 699px)" srcset="assets/img/hero-mobile.jpg">
+        <img src="assets/img/hero.jpg" alt="" width="1920" height="1080" fetchpriority="high" decoding="async">
+      </picture>
       <div class="hero__foto" id="hero-foto" aria-hidden="true"></div>
-      <div class="hero__grade" aria-hidden="true"></div>
       <div class="hero__conteudo container">
-        <p class="kicker"><span class="kicker__ponto"></span>Aplicação de PPF e películas</p>
-        <h1 class="hero__titulo">
+        <p class="kicker"><span class="kicker__ponto"></span>Studio de PPF e películas</p>
+        <h1 class="hero__marca"><span class="sr">O Rei do PPF</span><span aria-hidden="true">Oreidoppf</span></h1>
+        <p class="hero__titulo">
           <span class="linha">PPF de alto padrão</span>
           <span class="linha">para quem exige</span>
           <span class="linha amarelo">excelência.</span>
-        </h1>
+        </p>
         <div class="hero__base">
-          <div class="hero__texto">
-            <p class="hero__sub">Qualidade, precisão e acabamento impecável. Proteção de pintura e películas aplicadas com o cuidado de quem prepara um carro para a pista.</p>
-            <div class="hero__acoes">
-              <a class="botao botao--amarelo" data-wa="Olá! Quero um orçamento de PPF." href="#orcamento">
-                <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8a11.6 11.6 0 0 1-4.6-4.1c-.4-.5-1-1.6-1-2.8 0-1.3.7-1.9.9-2.2.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.5c-.2.2-.3.4-.1.7.2.4.9 1.4 1.9 2.3 1.3 1.1 2.3 1.5 2.7 1.6.3.2.5.1.7-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.3.1.2.1.7-.1 1.3Z"/></svg>
-                Pedir orçamento
-              </a>
-              <a class="botao botao--linha" href="#monte">Monte sua proteção</a>
-            </div>
-          </div>
-
-          <aside class="cronometro" aria-label="Nosso padrão">
-            <div class="cronometro__topo"><span>O REI DO PPF</span><span class="ao-vivo">● PADRÃO</span></div>
-            <ol class="cronometro__setores">
-              <li><span class="s">S1</span><span class="n">Qualidade</span><span class="barra"><i style="--p:1"></i></span></li>
-              <li><span class="s">S2</span><span class="n">Precisão</span><span class="barra"><i style="--p:1"></i></span></li>
-              <li><span class="s">S3</span><span class="n">Acabamento impecável</span><span class="barra"><i style="--p:1"></i></span></li>
-            </ol>
-            <div class="cronometro__rodape"><span>PINTURA</span><strong>PROTEGIDA</strong></div>
-          </aside>
+        <p class="hero__sub">Qualidade, precisão e acabamento impecável. Proteção de pintura e películas aplicadas com o cuidado de quem prepara um carro para a pista.</p>
+        <div class="hero__acoes">
+          <a class="botao botao--amarelo" data-wa="Olá! Quero um orçamento de PPF." href="#orcamento">
+            <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8a11.6 11.6 0 0 1-4.6-4.1c-.4-.5-1-1.6-1-2.8 0-1.3.7-1.9.9-2.2.3-.3.6-.3.8-.3h.6c.2 0 .4 0 .6.5l.9 2.1c.1.2.1.4 0 .6l-.4.6-.4.5c-.2.2-.3.4-.1.7.2.4.9 1.4 1.9 2.3 1.3 1.1 2.3 1.5 2.7 1.6.3.2.5.1.7-.1l.9-1.1c.2-.3.4-.2.7-.1l2 1c.3.1.5.2.6.3.1.2.1.7-.1 1.3Z"/></svg>
+            Pedir orçamento
+          </a>
+          <a class="botao botao--linha" href="#simulador">Simule em 3D</a>
+        </div>
         </div>
       </div>
-
-      <div class="pista" aria-hidden="true">
-        <svg class="carro-lateral" viewBox="0 0 800 280" role="img">
-          <defs>
-            <path id="carro-corpo" d="M52 196C46 176 48 158 60 148L92 138C150 128 200 118 250 108C300 76 360 58 430 56C486 55 520 64 560 86C600 106 640 118 700 128C742 134 762 146 770 166C774 178 772 192 766 204L692 206A58 58 0 0 0 576 206L248 206A58 58 0 0 0 132 206L60 204C54 202 53 200 52 196Z"/>
-            <clipPath id="corte-corpo"><use href="#carro-corpo"/></clipPath>
-            <linearGradient id="g-lataria" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="#2a2c30"/>
-              <stop offset=".45" stop-color="#16171a"/>
-              <stop offset="1" stop-color="#0b0c0e"/>
-            </linearGradient>
-            <linearGradient id="g-filme" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stop-color="#fff3c9" stop-opacity=".22"/>
-              <stop offset=".35" stop-color="#ffe066" stop-opacity=".06"/>
-              <stop offset=".6" stop-color="#ffffff" stop-opacity=".16"/>
-              <stop offset="1" stop-color="#ffc61a" stop-opacity=".05"/>
-            </linearGradient>
-            <linearGradient id="g-brilho" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0" stop-color="#fff" stop-opacity="0"/>
-              <stop offset=".5" stop-color="#fff6d8" stop-opacity=".55"/>
-              <stop offset="1" stop-color="#fff" stop-opacity="0"/>
-            </linearGradient>
-            <radialGradient id="g-sombra" cx=".5" cy=".5" r=".5">
-              <stop offset="0" stop-color="#000" stop-opacity=".85"/>
-              <stop offset="1" stop-color="#000" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
-          <ellipse cx="410" cy="252" rx="380" ry="20" fill="url(#g-sombra)"/>
-          <use href="#carro-corpo" fill="url(#g-lataria)"/>
-          <path d="M268 112C316 84 368 70 428 68C480 68 512 76 548 96L560 104C470 108 360 110 268 112Z" fill="#07080a" stroke="#3a3c41" stroke-width="1.5"/>
-          <path d="M440 68L446 110" stroke="#16171a" stroke-width="7"/>
-          <path d="M300 152C330 142 380 140 410 142L404 162C370 162 330 164 300 170Z" fill="#050506"/>
-          <path d="M430 114L446 192" stroke="#000" stroke-opacity=".7" stroke-width="2"/>
-          <path d="M712 138L758 150L752 158L706 148Z" fill="#f3eee0"/>
-          <path d="M56 152L92 144L92 152L58 160Z" fill="#e10600"/>
-          <g clip-path="url(#corte-corpo)">
-            <rect class="filme" x="40" y="40" width="740" height="180" fill="url(#g-filme)"/>
-            <rect class="brilho" x="-120" y="40" width="120" height="180" fill="url(#g-brilho)"/>
-          </g>
-          <use href="#carro-corpo" fill="none" stroke="#ffc61a" stroke-opacity=".55" stroke-width="1.5"/>
-          <path d="M96 150C300 140 520 140 750 156" fill="none" stroke="#ffe066" stroke-opacity=".5" stroke-width="1"/>
-          <g class="roda">
-            <circle cx="190" cy="210" r="48" fill="#08090a" stroke="#2c2e33" stroke-width="3"/>
-            <circle cx="190" cy="210" r="34" fill="none" stroke="#8d8a80" stroke-width="2"/>
-            <path d="M163 196A30 30 0 0 1 180 182" stroke="#ffc61a" stroke-width="7" fill="none" stroke-linecap="round"/>
-            <g class="aro" stroke="#8d8a80" stroke-width="3"><path d="M190 178V242M162 194L218 226M162 226L218 194"/></g>
-            <circle cx="190" cy="210" r="6" fill="#ffc61a"/>
-          </g>
-          <g class="roda">
-            <circle cx="634" cy="210" r="48" fill="#08090a" stroke="#2c2e33" stroke-width="3"/>
-            <circle cx="634" cy="210" r="34" fill="none" stroke="#8d8a80" stroke-width="2"/>
-            <path d="M607 196A30 30 0 0 1 624 182" stroke="#ffc61a" stroke-width="7" fill="none" stroke-linecap="round"/>
-            <g class="aro" stroke="#8d8a80" stroke-width="3"><path d="M634 178V242M606 194L662 226M606 226L662 194"/></g>
-            <circle cx="634" cy="210" r="6" fill="#ffc61a"/>
-          </g>
-          <g class="rodo">
-            <line x1="0" y1="40" x2="0" y2="226" stroke="#ffe066" stroke-width="2"/>
-            <rect x="-22" y="16" width="44" height="18" rx="2" fill="#ffc61a"/>
-            <text x="0" y="29.5" text-anchor="middle">PPF</text>
-          </g>
-        </svg>
-        <div class="zebra"></div>
-      </div>
+      <div class="zebra" aria-hidden="true"></div>
     </section>
 
     <!-- FAIXA -->
@@ -150,6 +85,57 @@
         <span>PPF Full Body</span><span>PPF Frontal</span><span>Faróis e lanternas</span><span>Nano cerâmica</span><span>Película G5 a G70</span><span>PPF interno</span><span>Acabamento impecável</span>
       </div>
     </div>
+
+    <!-- SIMULADOR 3D -->
+    <section class="studio3d" id="simulador">
+      <header class="studio3d__topo container">
+        <p class="kicker"><span class="kicker__ponto"></span>Simulador 3D</p>
+        <h2>Monte sua proteção.</h2>
+        <p class="secao__lead">Gire o carro e toque nas peças: o rodo passa e a película entra, peça por peça, como no studio.</p>
+      </header>
+      <div class="studio3d__palco" id="studio-palco">
+        <div class="studio3d__carregando" id="studio-carregando">
+          <img src="assets/img/logo-160.png" alt="" width="160" height="102">
+          <span id="studio-status">Abrindo o studio</span>
+          <div class="studio3d__barra"><i id="studio-barra"></i></div>
+        </div>
+        <div class="studio3d__cores" role="group" aria-label="Cor do carro">
+          <button type="button" data-cor="#22242a" style="--c:#22242a" aria-pressed="true" title="Grafite"><span class="sr">Grafite</span></button>
+          <button type="button" data-cor="#7d8083" style="--c:#7d8083" aria-pressed="false" title="Cinza cimento"><span class="sr">Cinza cimento</span></button>
+          <button type="button" data-cor="#e4e4df" style="--c:#e4e4df" aria-pressed="false" title="Branco"><span class="sr">Branco</span></button>
+          <button type="button" data-cor="#8f0d12" style="--c:#8f0d12" aria-pressed="false" title="Vermelho"><span class="sr">Vermelho</span></button>
+          <button type="button" data-cor="#0f2d5c" style="--c:#0f2d5c" aria-pressed="false" title="Azul"><span class="sr">Azul</span></button>
+        </div>
+        <p class="studio3d__dica" id="studio-dica">Arraste para girar · toque nas peças</p>
+        <div class="studio3d__rotulo" id="studio-rotulo" hidden></div>
+      </div>
+      <div class="studio3d__painel container" id="studio-painel">
+        <div class="bloco">
+          <span class="bloco__titulo">Pacotes</span>
+          <div class="pacotes" role="group" aria-label="Pacotes">
+            <button type="button" class="chip" data-pacote="frontal">Frontal</button>
+            <button type="button" class="chip" data-pacote="full">Full body</button>
+            <button type="button" class="chip" data-pacote="farois">Faróis e lanternas</button>
+            <button type="button" class="chip chip--fantasma" data-pacote="limpar">Limpar</button>
+          </div>
+        </div>
+        <div class="bloco">
+          <div class="leitura">
+            <div class="leitura__numero"><strong id="monte-total">0</strong><span>de <b id="monte-max">0</b> peças</span></div>
+            <div class="leitura__barra"><i id="monte-barra"></i></div>
+          </div>
+          <div class="pecas" id="pecas" role="group" aria-label="Peças do carro"></div>
+        </div>
+        <div class="bloco">
+          <label class="bloco__titulo" for="sim-faixa">Película nos vidros <b id="sim-g">G70</b></label>
+          <input type="range" id="sim-faixa" min="0" max="4" step="1" value="4">
+          <div class="simulador__marcas" aria-hidden="true"><span>G5</span><span>G20</span><span>G35</span><span>G50</span><span>G70</span></div>
+          <p class="simulador__desc" id="sim-desc"></p>
+          <p class="aviso"><strong>Dentro da lei.</strong> O Contran define quanto de luz cada vidro precisa deixar passar, e o para-brisa tem regra própria. A gente indica a película certa para cada vidro.</p>
+        </div>
+        <a class="botao botao--amarelo botao--largo" id="monte-enviar" href="#orcamento">Pedir orçamento dessa proteção</a>
+      </div>
+    </section>
 
     <!-- SERVIÇOS -->
     <section class="secao secao--cimento" id="servicos">
@@ -187,135 +173,6 @@
             <button class="botao botao--linha" type="button" id="bancada-limpar">Limpar capô</button>
           </div>
           <p class="bancada__nota">Simulação ilustrativa. Muitos filmes de PPF são autorregenerativos: riscos leves na superfície do filme somem com calor.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- MONTE SUA PROTEÇÃO -->
-    <section class="secao secao--cimento" id="monte">
-      <div class="container monte">
-        <header class="secao__topo monte__topo">
-          <p class="kicker"><span class="kicker__ponto"></span>Monte sua proteção</p>
-          <h2>Toque nas partes que você quer proteger.</h2>
-          <p class="secao__lead">Escolha peça por peça ou use um pacote pronto. A seleção vai junto no pedido de orçamento.</p>
-        </header>
-
-        <div class="monte__planta">
-          <svg class="carro-topo" id="carro-topo" viewBox="0 0 320 640" aria-label="Carro visto de cima com as partes para proteger">
-            <g class="pneus" fill="#050506">
-              <rect x="60" y="118" width="16" height="70" rx="6"/><rect x="244" y="118" width="16" height="70" rx="6"/>
-              <rect x="60" y="436" width="16" height="70" rx="6"/><rect x="244" y="436" width="16" height="70" rx="6"/>
-            </g>
-            <g class="partes">
-              <path data-parte="parachoque-d" d="M74 92C70 66 78 48 102 42C140 34 180 34 218 42C242 48 250 66 246 92Z"/>
-              <path data-parte="capo" d="M98 98L222 98Q232 156 222 214L98 214Q88 156 98 98Z"/>
-              <path data-parte="paralamas-d" d="M74 98L92 98Q83 156 92 214L77 214Q66 156 74 98Z"/>
-              <path data-parte="paralamas-d" d="M246 98L228 98Q237 156 228 214L243 214Q254 156 246 98Z"/>
-              <path data-parte="farois" d="M82 84L86 66Q92 57 104 55L126 52L121 66L101 70Q91 74 89 86Z"/>
-              <path data-parte="farois" d="M238 84L234 66Q228 57 216 55L194 52L199 66L219 70Q229 74 231 86Z"/>
-              <path data-parte="retrovisores" d="M58 228L76 232L76 250L56 248Q50 238 58 228Z"/>
-              <path data-parte="retrovisores" d="M262 228L244 232L244 250L264 248Q270 238 262 228Z"/>
-              <path data-parte="vidros" d="M102 222L218 222Q213 254 206 284L114 284Q107 254 102 222Z"/>
-              <path data-parte="teto" d="M116 292L204 292Q209 348 204 402L116 402Q111 348 116 292Z"/>
-              <path data-parte="vidros" d="M114 410L206 410Q212 434 216 456L104 456Q108 434 114 410Z"/>
-              <path data-parte="vidros" d="M100 236L108 286Q105 346 108 398L100 398Q96 318 100 236Z"/>
-              <path data-parte="vidros" d="M220 236L212 286Q215 346 212 398L220 398Q224 318 220 236Z"/>
-              <path data-parte="portas" d="M77 220L95 220Q99 266 97 314L79 314Q74 266 77 220Z"/>
-              <path data-parte="portas" d="M243 220L225 220Q221 266 223 314L241 314Q246 266 243 220Z"/>
-              <path data-parte="portas" d="M79 318L97 318Q99 364 96 410L79 410Q76 364 79 318Z"/>
-              <path data-parte="portas" d="M241 318L223 318Q221 364 224 410L241 410Q244 364 241 318Z"/>
-              <path data-parte="paralamas-t" d="M79 414L96 414Q90 470 99 530L80 530Q70 470 79 414Z"/>
-              <path data-parte="paralamas-t" d="M241 414L224 414Q230 470 221 530L240 530Q250 470 241 414Z"/>
-              <path data-parte="tampa" d="M104 462L216 462Q222 496 218 530L102 530Q98 496 104 462Z"/>
-              <path data-parte="parachoque-t" d="M78 536L242 536Q248 570 228 590C190 600 130 600 92 590Q72 570 78 536Z"/>
-              <path data-parte="lanternas" d="M84 540L120 540L116 552L86 557Z"/>
-              <path data-parte="lanternas" d="M236 540L200 540L204 552L234 557Z"/>
-            </g>
-            <text class="carro-topo__frente" x="160" y="22" text-anchor="middle">FRENTE</text>
-          </svg>
-        </div>
-
-        <div class="monte__painel">
-          <div class="pacotes" role="group" aria-label="Pacotes">
-            <button type="button" class="chip" data-pacote="frontal">Pacote frontal</button>
-            <button type="button" class="chip" data-pacote="full">Full body</button>
-            <button type="button" class="chip" data-pacote="vidros">Película nos vidros</button>
-            <button type="button" class="chip chip--fantasma" data-pacote="limpar">Limpar</button>
-          </div>
-          <div class="leitura">
-            <div class="leitura__numero"><strong id="monte-total">0</strong><span>de <b id="monte-max">0</b> partes</span></div>
-            <div class="leitura__barra"><i id="monte-barra"></i></div>
-          </div>
-          <ul class="monte__lista" id="monte-lista">
-            <li class="vazio">Nenhuma parte escolhida ainda.</li>
-          </ul>
-          <a class="botao botao--amarelo botao--largo" id="monte-enviar" href="#orcamento">Pedir orçamento dessa proteção</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- SIMULADOR DE PELÍCULA -->
-    <section class="secao secao--carbono" id="peliculas">
-      <div class="container simulador">
-        <header class="secao__topo">
-          <p class="kicker"><span class="kicker__ponto"></span>Simulador de película</p>
-          <h2>Do G5 ao G70: veja a diferença.</h2>
-          <p class="secao__lead">O número diz quanto de luz atravessa o vidro. Quanto menor, mais escura a película.</p>
-        </header>
-
-        <div class="simulador__cena">
-          <svg viewBox="0 0 600 300" class="janela" aria-label="Porta de carro com película aplicada">
-            <defs>
-              <linearGradient id="g-porta" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#26282c"/><stop offset="1" stop-color="#0c0d0f"/>
-              </linearGradient>
-              <linearGradient id="g-ceu" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#cfdde6"/><stop offset=".55" stop-color="#f1e6cf"/><stop offset="1" stop-color="#8b8f94"/>
-              </linearGradient>
-              <clipPath id="corte-vidros">
-                <path d="M330 64L360 64C430 70 490 110 536 188L330 188Z"/>
-                <path d="M74 188L74 122C124 82 204 64 300 64L300 188Z"/>
-              </clipPath>
-              <linearGradient id="g-reflexo" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".5" stop-color="#fff" stop-opacity=".22"/><stop offset="1" stop-color="#fff" stop-opacity="0"/>
-              </linearGradient>
-            </defs>
-            <rect width="600" height="300" fill="url(#g-porta)"/>
-            <g clip-path="url(#corte-vidros)">
-              <rect x="60" y="56" width="490" height="140" fill="url(#g-ceu)"/>
-              <path d="M60 150L120 150L120 126L170 126L170 140L230 140L230 112L290 112L290 146L360 146L360 120L420 120L420 150L550 150L550 196L60 196Z" fill="#6e747a" opacity=".55"/>
-              <path d="M60 160L550 160L550 196L60 196Z" fill="#2c2b2e"/>
-              <path d="M150 188L150 128Q150 110 172 108L214 106Q236 106 236 128L236 188Z" fill="#1d1c1f"/>
-              <ellipse cx="420" cy="122" rx="25" ry="29" fill="#2a2523"/>
-              <path d="M372 188Q376 152 420 148Q464 152 470 188Z" fill="#232024"/>
-              <path d="M470 186Q480 140 520 136" fill="none" stroke="#141316" stroke-width="10" stroke-linecap="round"/>
-              <rect id="tinta" x="60" y="56" width="490" height="140" fill="#050607" opacity=".62"/>
-              <path d="M180 56L240 56L150 196L90 196Z" fill="url(#g-reflexo)"/>
-              <path d="M420 56L450 56L360 196L330 196Z" fill="url(#g-reflexo)"/>
-            </g>
-            <path d="M330 64L360 64C430 70 490 110 536 188L330 188Z M74 188L74 122C124 82 204 64 300 64L300 188Z" fill="none" stroke="#08090a" stroke-width="6"/>
-            <path d="M40 206L566 206" stroke="#ffc61a" stroke-opacity=".6" stroke-width="1.5"/>
-            <path d="M318 196L318 292" stroke="#000" stroke-opacity=".55" stroke-width="2"/>
-            <rect x="236" y="226" width="54" height="12" rx="6" fill="#3a3c41"/>
-            <rect x="490" y="226" width="54" height="12" rx="6" fill="#3a3c41"/>
-          </svg>
-          <div class="simulador__leitura">
-            <span class="simulador__g" id="sim-g">G35</span>
-            <span class="simulador__luz"><b id="sim-luz">35%</b> da luz passa</span>
-          </div>
-        </div>
-
-        <div class="simulador__controle">
-          <label for="sim-faixa" class="sr">Escolha a película</label>
-          <input type="range" id="sim-faixa" min="0" max="4" step="1" value="2" list="sim-marcas">
-          <datalist id="sim-marcas"><option value="0"></option><option value="1"></option><option value="2"></option><option value="3"></option><option value="4"></option></datalist>
-          <div class="simulador__marcas" aria-hidden="true"><span>G5</span><span>G20</span><span>G35</span><span>G50</span><span>G70</span></div>
-          <p class="simulador__desc" id="sim-desc">Equilíbrio entre privacidade e visibilidade.</p>
-          <div class="medidores">
-            <div><span>Privacidade</span><div class="medidor"><i id="sim-priv"></i></div></div>
-            <div><span>Visibilidade à noite</span><div class="medidor"><i id="sim-vis"></i></div></div>
-          </div>
-          <p class="aviso"><strong>Dentro da lei.</strong> O Contran define quanto de luz cada vidro precisa deixar passar, e o para-brisa tem regra própria. A gente indica a película certa para cada vidro do seu carro.</p>
         </div>
       </div>
     </section>
@@ -390,7 +247,7 @@
             <p>O transparente brilhante mantém a cor original e realça o brilho. Também existe o acabamento fosco, que deixa a pintura com aspecto acetinado.</p>
           </details>
           <details>
-            <summary>Quanto tempo o carro fica no estúdio?</summary>
+            <summary>Quanto tempo o carro fica no studio?</summary>
             <p>Depende do serviço e do tamanho do carro. O prazo vem junto com o orçamento.</p>
           </details>
           <details>
@@ -424,7 +281,7 @@
           <ul class="contatos">
             <li><span>WhatsApp</span><a id="contato-wa" href="https://wa.me/5511984551361" target="_blank" rel="noopener">(11) 98455-1361</a></li>
             <li><span>Instagram</span><a href="https://instagram.com/oreidoppf" target="_blank" rel="noopener">@oreidoppf</a></li>
-            <li><span>Estúdio</span><a href="https://instagram.com/oreidoppf.estudio" target="_blank" rel="noopener">@oreidoppf.estudio</a></li>
+            <li><span>Studio</span><a href="https://instagram.com/oreidoppf.estudio" target="_blank" rel="noopener">@oreidoppf.estudio</a></li>
           </ul>
         </header>
 
@@ -460,8 +317,8 @@
     <div class="zebra zebra--fina" aria-hidden="true"></div>
     <div class="container rodape__grade">
       <div class="rodape__marca">
-        <img src="assets/img/logo-320.png" alt="Coroa do Rei do PPF" width="320" height="205" loading="lazy">
-        <p class="marca__nome marca__nome--grande">O Rei <small>do</small> PPF</p>
+        <img src="assets/img/logo-320.png" alt="" width="320" height="205" loading="lazy">
+        <p class="marca__nome marca__nome--grande">Oreidoppf</p>
       </div>
       <ul class="rodape__bio">
         <li>PPF de alto padrão para quem exige excelência</li>
@@ -471,11 +328,11 @@
       <nav class="rodape__links" aria-label="Contato">
         <a href="https://wa.me/5511984551361" target="_blank" rel="noopener">WhatsApp</a>
         <a href="https://instagram.com/oreidoppf" target="_blank" rel="noopener">Instagram</a>
-        <a href="https://instagram.com/oreidoppf.estudio" target="_blank" rel="noopener">Estúdio</a>
-        <a href="admin.html" class="rodape__adm">Área do estúdio</a>
+        <a href="https://instagram.com/oreidoppf.estudio" target="_blank" rel="noopener">Studio</a>
+        <a href="admin.html" class="rodape__adm">Área do studio</a>
       </nav>
     </div>
-    <p class="rodape__final container">© <span id="ano">2026</span> O Rei do PPF. Todos os direitos reservados.</p>
+    <p class="rodape__final container">© <span id="ano">2026</span> O Rei do PPF. Todos os direitos reservados.<br>Carro 3D: <a href="https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/CarConcept" target="_blank" rel="noopener">Car Concept</a>, de Eric Chadwick (Darmstadt Graphics Group), licença CC BY 4.0.</p>
   </footer>
 
   <a class="wa-flutuante" id="wa-flutuante" href="https://wa.me/5511984551361" target="_blank" rel="noopener" aria-label="Falar no WhatsApp">

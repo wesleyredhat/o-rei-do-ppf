@@ -43,7 +43,7 @@ export function iniciaBancada(canvas, { placarSem, placarCom, dica, botaoPedra, 
     verniz.addColorStop(1, '#17181b');
     g.fillStyle = verniz;
     g.fillRect(0, 0, W, H);
-    // luminárias do estúdio refletidas no verniz
+    // luminárias do studio refletidas no verniz
     g.save();
     g.translate(W / 2, H / 2);
     g.rotate(-.32);

@@ -1,5 +1,6 @@
 import { CONFIG, SERVICOS, waLink, supabaseLigado, fotoUrl } from './config.js';
 import { iniciaBancada } from './bancada.js';
+import { PARTES, PACOTES, PELICULAS } from './partes.js';
 
 const $ = (sel, raiz = document) => raiz.querySelector(sel);
 const $$ = (sel, raiz = document) => [...raiz.querySelectorAll(sel)];
@@ -69,106 +70,137 @@ iniciaBancada($('#bancada-tela'), {
   botaoLimpar: $('#bancada-limpar'),
 });
 
-// ---------- monte sua proteção ----------
-const PARTES = {
-  'parachoque-d': 'Para-choque dianteiro',
-  farois: 'Faróis',
-  capo: 'Capô',
-  'paralamas-d': 'Para-lamas dianteiros',
-  retrovisores: 'Retrovisores',
-  portas: 'Portas',
-  teto: 'Teto e colunas',
-  'paralamas-t': 'Laterais traseiras',
-  tampa: 'Tampa traseira',
-  'parachoque-t': 'Para-choque traseiro',
-  lanternas: 'Lanternas',
-  vidros: 'Vidros (película)',
-};
-const FRONTAL = ['parachoque-d', 'farois', 'capo', 'paralamas-d', 'retrovisores'];
-const PPF = Object.keys(PARTES).filter((p) => p !== 'vidros');
-const PACOTES = { frontal: FRONTAL, full: PPF, vidros: ['vidros'] };
+// ---------- simulador 3D: monte sua proteção ----------
 const escolhidas = new Set();
-const pecas = $$('#carro-topo .partes path');
+let studio = null;
+let pelicula = 4;
+let corAtual = '#22242a';
 
-for (const p of pecas) {
-  p.setAttribute('tabindex', '0');
-  p.setAttribute('role', 'checkbox');
-  p.setAttribute('aria-label', PARTES[p.dataset.parte]);
-  const irmas = () => pecas.filter((q) => q.dataset.parte === p.dataset.parte);
-  p.addEventListener('pointerenter', () => irmas().forEach((q) => q.classList.add('foco')));
-  p.addEventListener('pointerleave', () => irmas().forEach((q) => q.classList.remove('foco')));
-  p.addEventListener('click', () => alterna(p.dataset.parte));
-  p.addEventListener('keydown', (e) => {
-    if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); alterna(p.dataset.parte); }
-  });
-}
-function alterna(parte) {
-  escolhidas.has(parte) ? escolhidas.delete(parte) : escolhidas.add(parte);
+$('#pecas').innerHTML = PARTES.map((p) => `<button type="button" class="chip chip--peca" data-peca="${p.id}" aria-pressed="false">${esc(p.nome)}</button>`).join('');
+$('#pecas').addEventListener('click', (e) => {
+  const b = e.target.closest('[data-peca]');
+  if (b) alterna(b.dataset.peca);
+});
+function alterna(id) {
+  escolhidas.has(id) ? escolhidas.delete(id) : escolhidas.add(id);
   atualizaMonte();
 }
 for (const b of $$('[data-pacote]')) {
   b.addEventListener('click', () => {
     const pacote = PACOTES[b.dataset.pacote];
     if (!pacote) escolhidas.clear();
-    else if (pacote.every((p) => escolhidas.has(p))) pacote.forEach((p) => escolhidas.delete(p));
-    else pacote.forEach((p) => escolhidas.add(p));
+    else if (pacote.every((id) => escolhidas.has(id))) pacote.forEach((id) => escolhidas.delete(id));
+    else pacote.forEach((id) => escolhidas.add(id));
     atualizaMonte();
   });
 }
 function servicoSugerido() {
-  const ppf = PPF.filter((p) => escolhidas.has(p));
-  if (ppf.length === PPF.length) return 'ppf-full';
+  const ppf = PACOTES.full.filter((id) => escolhidas.has(id));
+  if (ppf.length === PACOTES.full.length) return 'ppf-full';
   if (!ppf.length) return escolhidas.has('vidros') ? 'pelicula' : null;
-  return ppf.every((p) => FRONTAL.includes(p)) ? 'ppf-frontal' : 'ppf-partes';
+  if (ppf.every((id) => PACOTES.farois.includes(id))) return 'ppf-farois';
+  return ppf.every((id) => PACOTES.frontal.includes(id)) ? 'ppf-frontal' : 'ppf-partes';
 }
 function atualizaMonte() {
-  const total = Object.keys(PARTES).length;
-  const lista = Object.keys(PARTES).filter((p) => escolhidas.has(p));
-  for (const p of pecas) {
-    const on = escolhidas.has(p.dataset.parte);
-    p.classList.toggle('on', on);
-    p.setAttribute('aria-checked', String(on));
-  }
+  const lista = PARTES.filter((p) => escolhidas.has(p.id));
+  for (const b of $$('[data-peca]')) b.setAttribute('aria-pressed', String(escolhidas.has(b.dataset.peca)));
   for (const b of $$('[data-pacote]')) {
     const pacote = PACOTES[b.dataset.pacote];
-    if (pacote) b.setAttribute('aria-pressed', String(pacote.every((p) => escolhidas.has(p))));
+    if (pacote) b.setAttribute('aria-pressed', String(pacote.every((id) => escolhidas.has(id))));
   }
   $('#monte-total').textContent = lista.length;
-  $('#monte-max').textContent = total;
-  $('#monte-barra').style.width = `${(lista.length / total) * 100}%`;
-  $('#monte-lista').innerHTML = lista.length
-    ? lista.map((p) => `<li>${PARTES[p]}</li>`).join('')
-    : '<li class="vazio">Nenhuma parte escolhida ainda.</li>';
+  $('#monte-max').textContent = PARTES.length;
+  $('#monte-barra').style.width = `${(lista.length / PARTES.length) * 100}%`;
   $('#f-partes-campo').hidden = !lista.length;
-  $('#f-partes').textContent = lista.map((p) => PARTES[p]).join(', ');
+  $('#f-partes').textContent = lista.map((p) => p.nome).join(', ');
+  studio?.define(escolhidas);
 }
 $('#monte-enviar').addEventListener('click', () => {
   const s = servicoSugerido();
   if (s) selServico.value = s;
 });
-atualizaMonte();
 
-// ---------- simulador de película ----------
-const PELICULAS = [
-  { g: 5, tinta: .93, desc: 'Máxima privacidade. De fora, quase não se vê o interior.' },
-  { g: 20, tinta: .8, desc: 'Bem escura. Privacidade alta e visual esportivo.' },
-  { g: 35, tinta: .64, desc: 'Equilíbrio entre privacidade e visibilidade.' },
-  { g: 50, tinta: .46, desc: 'Leve. Corta o brilho do sol sem escurecer muito.' },
-  { g: 70, tinta: .24, desc: 'Quase transparente. Conforto térmico sem mudar o visual.' },
-];
+// película: mexer no controle já coloca os vidros na proteção
 const faixa = $('#sim-faixa');
-function atualizaSimulador() {
-  const p = PELICULAS[Number(faixa.value)];
-  $('#tinta').setAttribute('opacity', p.tinta);
+function mostraPelicula() {
+  const p = PELICULAS[pelicula];
   $('#sim-g').textContent = `G${p.g}`;
-  $('#sim-luz').textContent = `${p.g}%`;
-  $('#sim-desc').textContent = p.desc;
-  $('#sim-priv').style.width = `${((100 - p.g) / 95) * 100}%`;
-  $('#sim-vis').style.width = `${(p.g / 70) * 100}%`;
+  $('#sim-desc').textContent = `${p.g}% da luz passa. ${p.desc}`;
   faixa.setAttribute('aria-valuetext', `G${p.g}, ${p.g}% da luz passa`);
 }
-faixa.addEventListener('input', atualizaSimulador);
-atualizaSimulador();
+faixa.addEventListener('input', () => {
+  pelicula = Number(faixa.value);
+  escolhidas.add('vidros');
+  mostraPelicula();
+  studio?.pelicula(pelicula);
+  atualizaMonte();
+});
+mostraPelicula();
+atualizaMonte();
+
+for (const b of $$('[data-cor]')) {
+  b.addEventListener('click', () => {
+    corAtual = b.dataset.cor;
+    for (const o of $$('[data-cor]')) o.setAttribute('aria-pressed', String(o === b));
+    studio?.cor(corAtual);
+  });
+}
+
+// o 3D só carrega quando o visitante chega perto do simulador
+const palco = $('#studio-palco');
+const rotulo = $('#studio-rotulo');
+let abrindo = false;
+function semTresD(msg) {
+  palco.classList.add('sem-3d');
+  $('#studio-status').textContent = msg;
+}
+function abreStudio() {
+  if (abrindo) return;
+  abrindo = true;
+  if (!window.WebGL2RenderingContext) return semTresD('Este aparelho não abre o 3D. Escolha as peças aqui embaixo.');
+  import('./estudio3d.js')
+    .then(({ montaStudio }) => montaStudio(palco, {
+      urlModelo: 'assets/3d/carro.glb',
+      urlCoroa: 'assets/img/logo.png',
+      deslocaX: () => (matchMedia('(min-width: 1100px)').matches ? $('#studio-painel').offsetWidth / 2 : 0),
+      aoProgresso: (p) => {
+        $('#studio-barra').style.width = `${Math.round(p * 100)}%`;
+        $('#studio-status').textContent = `Abrindo o studio ${Math.round(p * 100)}%`;
+      },
+      aoClicar: (id) => {
+        $('#studio-dica').classList.add('some');
+        alterna(id);
+      },
+      aoPassar: (info) => {
+        rotulo.hidden = !info;
+        if (!info) return;
+        rotulo.textContent = `${info.nome} · ${escolhidas.has(info.id) ? 'protegida' : 'toque para proteger'}`;
+        rotulo.style.left = `${info.x + 14}px`;
+        rotulo.style.top = `${info.y + 14}px`;
+      },
+    }))
+    .then((s) => {
+      studio = s;
+      studio.cor(corAtual);
+      studio.pelicula(pelicula);
+      studio.define(escolhidas);
+      palco.classList.add('pronto');
+    })
+    .catch((err) => {
+      console.warn('studio 3D indisponível', err);
+      semTresD('O 3D não abriu neste aparelho. Escolha as peças aqui embaixo.');
+    });
+}
+if ('IntersectionObserver' in window) {
+  const io = new IntersectionObserver(([it]) => {
+    if (!it.isIntersecting) return;
+    io.disconnect();
+    abreStudio();
+  }, { rootMargin: '700px 0px' });
+  io.observe(palco);
+} else {
+  abreStudio();
+}
 
 // ---------- galeria ----------
 let fotos = [];
@@ -288,7 +320,7 @@ $('#form-orcamento').addEventListener('submit', (e) => {
     return;
   }
   $('#form-erro').textContent = '';
-  const partes = Object.keys(PARTES).filter((p) => escolhidas.has(p)).map((p) => PARTES[p]);
+  const partes = PARTES.filter((p) => escolhidas.has(p.id)).map((p) => p.nome);
   const servico = selServico.options[selServico.selectedIndex].text;
   const obs = form.mensagem.value.trim();
   const linhas = [
@@ -305,7 +337,7 @@ $('#form-orcamento').addEventListener('submit', (e) => {
 });
 
 // ---------- revelar ao rolar ----------
-const revelar = [...$$('.secao__topo'), ...$$('.grid-largada > li'), ...$$('.volta__etapa'), $('.bancada__quadro'), $('.bancada__painel'), $('.monte__planta'), $('.monte__painel'), $('.simulador__cena'), $('.simulador__controle'), $('.faq'), $('.form')].filter(Boolean);
+const revelar = [...$$('.secao__topo'), ...$$('.grid-largada > li'), ...$$('.volta__etapa'), $('.bancada__quadro'), $('.bancada__painel'), $('.faq'), $('.form')].filter(Boolean);
 if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
   const io = new IntersectionObserver((itens) => {
     for (const it of itens) if (it.isIntersecting) { it.target.classList.add('visto'); io.unobserve(it.target); }
@@ -317,8 +349,16 @@ if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: re
   });
 }
 
-// o botão flutuante sai de cena quando o formulário está na tela
+// o botão flutuante sai de cena no topo (que já tem o botão de WhatsApp) e no formulário
 if ('IntersectionObserver' in window) {
   const flutuante = $('#wa-flutuante');
-  new IntersectionObserver(([it]) => flutuante.classList.toggle('escondido', it.isIntersecting), { threshold: .2 }).observe($('#orcamento'));
+  const naTela = new Set();
+  new IntersectionObserver((itens) => {
+    for (const it of itens) it.isIntersecting ? naTela.add(it.target) : naTela.delete(it.target);
+    flutuante.classList.toggle('escondido', naTela.size > 0);
+  }, { threshold: .2 }).observe($('#orcamento'));
+  new IntersectionObserver(([it]) => {
+    it.isIntersecting ? naTela.add(it.target) : naTela.delete(it.target);
+    flutuante.classList.toggle('escondido', naTela.size > 0);
+  }, { threshold: .5 }).observe($('.hero'));
 }
