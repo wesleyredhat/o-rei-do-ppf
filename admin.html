@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Área do estúdio | O Rei do PPF</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#0a0a0b">
+  <link rel="icon" href="assets/img/favicon.png" type="image/png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Big+Shoulders+Display:wght@600;700;800;900&family=Chivo+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body class="adm">
+  <!-- ENTRAR -->
+  <main class="entrar" id="tela-entrar" hidden>
+    <form class="entrar__caixa" id="form-entrar">
+      <img src="assets/img/logo-160.png" alt="" width="160" height="102">
+      <h1>Área do estúdio</h1>
+      <p class="entrar__sub">Entre para subir as fotos dos carros.</p>
+      <div class="campo">
+        <label for="e-email">E-mail</label>
+        <input id="e-email" type="email" autocomplete="username" required>
+      </div>
+      <div class="campo">
+        <label for="e-senha">Senha</label>
+        <input id="e-senha" type="password" autocomplete="current-password" required>
+      </div>
+      <p class="form__erro" id="entrar-erro" role="alert"></p>
+      <button class="botao botao--amarelo botao--largo" type="submit">Entrar</button>
+      <a class="entrar__voltar" href="./">Voltar para o site</a>
+    </form>
+  </main>
+
+  <!-- SEM BANCO -->
+  <main class="entrar" id="tela-sem-banco" hidden>
+    <div class="entrar__caixa">
+      <img src="assets/img/logo-160.png" alt="" width="160" height="102">
+      <h1>Falta ligar o banco</h1>
+      <p class="entrar__sub">O painel usa o Supabase para guardar as fotos. Preencha <code>SUPABASE_URL</code> e <code>SUPABASE_ANON_KEY</code> em <code>assets/js/config.js</code> e rode o <code>supabase/schema.sql</code>.</p>
+      <a class="botao botao--linha botao--largo" href="./">Voltar para o site</a>
+    </div>
+  </main>
+
+  <!-- PAINEL -->
+  <div id="tela-painel" hidden>
+    <header class="adm-topo">
+      <a class="marca" href="./" title="Ver o site">
+        <img class="marca__coroa" src="assets/img/logo-160.png" alt="" width="160" height="102">
+        <span class="marca__nome">Estúdio</span>
+      </a>
+      <div class="adm-topo__acoes">
+        <a class="adm-link" href="./#galeria" target="_blank" rel="noopener">Ver site</a>
+        <button class="adm-link" id="sair" type="button">Sair</button>
+      </div>
+    </header>
+
+    <main class="adm-corpo">
+      <section class="cartao" aria-labelledby="t-subir">
+        <h2 id="t-subir">Subir fotos</h2>
+        <label class="soltar" id="soltar">
+          <input type="file" id="arquivos" accept="image/*" multiple>
+          <span class="soltar__icone" aria-hidden="true">+</span>
+          <strong>Escolher fotos</strong>
+          <span>Da galeria do celular ou da câmera. Pode escolher várias.</span>
+        </label>
+        <ul class="previas" id="previas"></ul>
+
+        <form id="form-subir" class="subir" hidden>
+          <div class="campo">
+            <label for="s-carro">Carro</label>
+            <input id="s-carro" placeholder="Ex.: BMW M3 2024" autocomplete="off">
+          </div>
+          <div class="campo">
+            <label for="s-servico">Serviço</label>
+            <select id="s-servico"></select>
+          </div>
+          <div class="campo">
+            <label for="s-legenda">Legenda <small>(opcional)</small></label>
+            <input id="s-legenda" placeholder="Ex.: PPF fosco no carro inteiro" autocomplete="off">
+          </div>
+          <label class="marcar">
+            <input type="checkbox" id="s-destaque">
+            <span>Usar a primeira foto como capa do site</span>
+          </label>
+          <div class="progresso" id="progresso" hidden><i></i><span></span></div>
+          <p class="form__erro" id="subir-erro" role="alert"></p>
+          <button class="botao botao--amarelo botao--largo" id="s-enviar" type="submit">Publicar</button>
+        </form>
+      </section>
+
+      <section class="cartao" aria-labelledby="t-fotos">
+        <div class="cartao__topo">
+          <h2 id="t-fotos">Fotos no site</h2>
+          <span class="contador" id="contador"></span>
+        </div>
+        <p class="dica">A capa do site é a foto mais recente marcada com a coroa. Fotos ocultas não aparecem para os clientes.</p>
+        <ul class="adm-fotos" id="adm-fotos"></ul>
+      </section>
+    </main>
+  </div>
+
+  <dialog class="editar" id="editar">
+    <form method="dialog" id="form-editar">
+      <h2>Editar foto</h2>
+      <img id="ed-img" alt="">
+      <div class="campo">
+        <label for="ed-carro">Carro</label>
+        <input id="ed-carro" autocomplete="off">
+      </div>
+      <div class="campo">
+        <label for="ed-servico">Serviço</label>
+        <select id="ed-servico"></select>
+      </div>
+      <div class="campo">
+        <label for="ed-legenda">Legenda</label>
+        <input id="ed-legenda" autocomplete="off">
+      </div>
+      <div class="editar__acoes">
+        <button class="botao botao--linha" value="cancelar" formnovalidate>Cancelar</button>
+        <button class="botao botao--amarelo" value="salvar">Salvar</button>
+      </div>
+    </form>
+  </dialog>
+
+  <div class="aviso-flutuante" id="aviso" role="status" hidden></div>
+
+  <script type="module" src="assets/js/admin.js"></script>
+</body>
+</html>
